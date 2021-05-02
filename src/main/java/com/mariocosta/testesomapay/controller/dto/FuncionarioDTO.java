@@ -1,4 +1,4 @@
-package com.mariocosta.testesomapay.rest.dto;
+package com.mariocosta.testesomapay.controller.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

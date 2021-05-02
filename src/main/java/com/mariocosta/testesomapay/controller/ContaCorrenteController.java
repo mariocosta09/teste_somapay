@@ -1,4 +1,4 @@
-package com.mariocosta.testesomapay.rest;
+package com.mariocosta.testesomapay.controller;
 
 import com.mariocosta.testesomapay.model.entity.ContaCorrente;
 import com.mariocosta.testesomapay.model.entity.model.repository.ContaCorrenterRepository;

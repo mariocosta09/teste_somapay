@@ -1,4 +1,4 @@
-package com.mariocosta.testesomapay.rest;
+package com.mariocosta.testesomapay.controller;
 
 import com.mariocosta.testesomapay.model.entity.ContaCorrente;
 import com.mariocosta.testesomapay.model.entity.Empresa;
@@ -6,13 +6,16 @@ import com.mariocosta.testesomapay.model.entity.Funcionario;
 import com.mariocosta.testesomapay.model.entity.model.repository.ContaCorrenterRepository;
 import com.mariocosta.testesomapay.model.entity.model.repository.EmpresaRepository;
 import com.mariocosta.testesomapay.model.entity.model.repository.FuncionarioRepository;
-import com.mariocosta.testesomapay.rest.dto.EmpresaDTO;
-import com.mariocosta.testesomapay.rest.dto.FuncionarioDTO;
+import com.mariocosta.testesomapay.controller.dto.FuncionarioDTO;
+import com.mariocosta.testesomapay.service.FuncionarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,9 @@ public class FuncionarioController {
     private final EmpresaRepository empresaRepository;
     private final ContaCorrenterRepository contaCorrenteRepository;
     private final FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private FuncionarioService funcionarioService;
 
     @GetMapping
     public List<Funcionario> getFuncionarios(){
@@ -39,9 +45,9 @@ public class FuncionarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Funcionario cerate(@RequestBody FuncionarioDTO dto){
+    public Funcionario create(@RequestBody FuncionarioDTO dto){
 
-        ContaCorrente conta =   this.createContaCorrente(dto.getNumero_agencia(),dto.getNumero_conta(), dto.getSaldo(), dto.getTipo_conta());
+        ContaCorrente conta =   funcionarioService.createContaCorrente(dto.getNumero_agencia(),dto.getNumero_conta(), dto.getSaldo(), dto.getTipo_conta());
 
         Optional<ContaCorrente> contaCorrenteOptional = contaCorrenteRepository.findById(conta.getId());
         ContaCorrente contaCorrente = contaCorrenteOptional.orElse(new ContaCorrente());
@@ -88,34 +94,24 @@ public class FuncionarioController {
 
                     ContaCorrente contaCorrente = funcionario.getContaCorrente();
 
-                    this.updateContaCorrente(contaCorrente,funcionarioUpdate);
+                    funcionarioService.updateContaCorrente(contaCorrente,funcionarioUpdate);
                     return funcionarioRepository.save(funcionario);
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     }
 
+    @GetMapping("/saldo/{id}")
+    public ResponseEntity<Object> getSaldoFuncionario(@PathVariable Integer id){
+        Integer saldoFuncionario = funcionarioRepository
+                .findById(id)
+                .map(saldo -> {
+                    return  saldo.getContaCorrente().getSaldo();
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-
-    public ContaCorrente createContaCorrente(Integer numero_agencia, String numero_conta, Integer saldo, String tipo_conta){
-        ContaCorrente contaCorrente = new ContaCorrente();
-        contaCorrente.setNumero_agencia(numero_agencia);
-        contaCorrente.setNumero_conta(numero_conta);
-        contaCorrente.setSaldo(saldo);
-        contaCorrente.setTipo_conta(tipo_conta);
-        return  contaCorrenteRepository.save(contaCorrente);
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                Collections.singletonMap("saldo_funcionario", saldoFuncionario));
     }
 
-    public void updateContaCorrente(ContaCorrente conta, FuncionarioDTO funcionarioUpdate){
 
-        contaCorrenteRepository.findById(conta.getId())
-                .map(contaCorrente -> {
-                    contaCorrente.setNumero_conta(funcionarioUpdate.getNumero_conta());
-                    contaCorrente.setNumero_agencia(funcionarioUpdate.getNumero_agencia());
-                    contaCorrente.setTipo_conta(funcionarioUpdate.getTipo_conta());
-                    contaCorrente.setSaldo(funcionarioUpdate.getSaldo());
-                    return contaCorrenteRepository.save(contaCorrente);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-    }
 }

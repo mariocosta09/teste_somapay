@@ -1,11 +1,10 @@
 package com.mariocosta.testesomapay.model.entity;
-
-import com.mariocosta.testesomapay.model.entity.ContaCorrente;
-import com.mariocosta.testesomapay.model.entity.Empresa;
 import lombok.Data;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -34,9 +33,9 @@ public class Funcionario {
     @JoinColumn(name="id_empresa", nullable=false)
     private Empresa empresa;
 
-
     @PrePersist
     public void prePersist(){
         setData_cadastro(LocalDate.now());
     }
+
 }
