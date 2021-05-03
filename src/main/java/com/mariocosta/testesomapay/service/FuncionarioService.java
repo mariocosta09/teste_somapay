@@ -1,8 +1,8 @@
 package com.mariocosta.testesomapay.service;
 
 import com.mariocosta.testesomapay.controller.dto.FuncionarioDTO;
-import com.mariocosta.testesomapay.model.entity.ContaCorrente;
-import com.mariocosta.testesomapay.model.entity.model.repository.ContaCorrenterRepository;
+import com.mariocosta.testesomapay.model.ContaCorrente;
+import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

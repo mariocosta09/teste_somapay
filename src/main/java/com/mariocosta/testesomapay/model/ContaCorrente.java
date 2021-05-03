@@ -1,4 +1,4 @@
-package com.mariocosta.testesomapay.model.entity;
+package com.mariocosta.testesomapay.model;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,25 +12,20 @@ public class ContaCorrente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false,unique = true, length = 50)
-    @NotEmpty(message = "{campo.conta.invalido}")
+    @Column(nullable = false, length = 50)
     private String numero_conta;
 
-    @Column(nullable = false, unique = true, length = 50)
-    @NotEmpty(message = "{campo.agencia.invalido}")
+    @Column(nullable = false,  length = 50)
     private Integer numero_agencia;
 
     @Column(nullable = false, length = 2)
-    @NotEmpty(message = "{campo.tipo_cont.invalido}")
     private String tipo_conta;
 
     @Column(nullable = false)
-    @NotEmpty(message = "{campo.saldo.invalido}")
     private Integer saldo;
 
     @Column
     private LocalDate data_cadastro;
-
 
     @PrePersist
     public void prePersist(){

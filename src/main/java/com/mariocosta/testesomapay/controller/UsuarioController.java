@@ -1,11 +1,12 @@
 package com.mariocosta.testesomapay.controller;
 
-import com.mariocosta.testesomapay.model.entity.Usuario;
-import com.mariocosta.testesomapay.model.entity.model.repository.UsuarioRepository;
+import com.mariocosta.testesomapay.model.Usuario;
+import com.mariocosta.testesomapay.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -16,7 +17,7 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUsuario(@RequestBody @Validated Usuario usuario){
+    public void createUsuario(@RequestBody @Valid Usuario usuario){
             usuarioRepository.save(usuario);
     }
 

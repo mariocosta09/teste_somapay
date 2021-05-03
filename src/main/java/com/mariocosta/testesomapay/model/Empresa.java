@@ -1,30 +1,35 @@
-package com.mariocosta.testesomapay.model.entity;
+package com.mariocosta.testesomapay.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.validation.annotation.Validated;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Data
-public class Funcionario {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Empresa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
 
     @Column(nullable = false, length = 255)
-    @NotEmpty(message = "{campo.nome.obrigatorio}")
-    private  String nome;
+    @NotEmpty(message = "{campo.razao_social.obrigatorio}")
+    private  String razao_social;
 
-    @Column(nullable = false, unique = true, length = 20)
-    @NotNull(message = "{campo.cpf.obrigatorio}")
-    @CPF(message = "Cpf invalido")
-    private String cpf;
+    @Column(nullable = false,unique = true, length = 20)
+    @NotNull(message = "{campo.cnpj.obrigatorio}")
+    @CNPJ(message = "{campo.cnpj.invalido}")
+    private String cnpj;
 
     @Column(nullable = false, length = 255)
     @NotEmpty(message = "{campo.endereco.obrigatorio}")
@@ -37,13 +42,12 @@ public class Funcionario {
     @JoinColumn(name="id_conta", nullable=false)
     private ContaCorrente contaCorrente;
 
-    @ManyToOne
-    @JoinColumn(name="id_empresa", nullable=false)
-    private Empresa empresa;
 
     @PrePersist
     public void prePersist(){
         setData_cadastro(LocalDate.now());
     }
+
+
 
 }

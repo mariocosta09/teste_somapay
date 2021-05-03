@@ -1,7 +1,7 @@
 package com.mariocosta.testesomapay.controller;
 
-import com.mariocosta.testesomapay.model.entity.ContaCorrente;
-import com.mariocosta.testesomapay.model.entity.model.repository.ContaCorrenterRepository;
+import com.mariocosta.testesomapay.model.ContaCorrente;
+import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

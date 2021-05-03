@@ -1,7 +1,7 @@
 package com.mariocosta.testesomapay.service;
 
 import com.mariocosta.testesomapay.controller.dto.FolhaPagamentoDTO;
-import com.mariocosta.testesomapay.model.entity.Funcionario;
+import com.mariocosta.testesomapay.model.Funcionario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

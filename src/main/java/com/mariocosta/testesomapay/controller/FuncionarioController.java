@@ -1,11 +1,11 @@
 package com.mariocosta.testesomapay.controller;
 
-import com.mariocosta.testesomapay.model.entity.ContaCorrente;
-import com.mariocosta.testesomapay.model.entity.Empresa;
-import com.mariocosta.testesomapay.model.entity.Funcionario;
-import com.mariocosta.testesomapay.model.entity.model.repository.ContaCorrenterRepository;
-import com.mariocosta.testesomapay.model.entity.model.repository.EmpresaRepository;
-import com.mariocosta.testesomapay.model.entity.model.repository.FuncionarioRepository;
+import com.mariocosta.testesomapay.model.ContaCorrente;
+import com.mariocosta.testesomapay.model.Empresa;
+import com.mariocosta.testesomapay.model.Funcionario;
+import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
+import com.mariocosta.testesomapay.repository.EmpresaRepository;
+import com.mariocosta.testesomapay.repository.FuncionarioRepository;
 import com.mariocosta.testesomapay.controller.dto.FuncionarioDTO;
 import com.mariocosta.testesomapay.service.FuncionarioService;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,6 @@
-package com.mariocosta.testesomapay.model.entity;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+package com.mariocosta.testesomapay.model;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,23 +9,19 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Empresa {
-
+public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
 
     @Column(nullable = false, length = 255)
-    @NotEmpty(message = "{campo.razao_social.obrigatorio}")
-    private  String razao_social;
+    @NotEmpty(message = "{campo.nome.obrigatorio}")
+    private  String nome;
 
-    @Column(nullable = false,unique = true, length = 20)
-    @NotNull(message = "{campo.cnpj.obrigatorio}")
-    @CNPJ(message = "{campo.cnpj.invalido}")
-    private String cnpj;
+    @Column(nullable = false, unique = true, length = 20)
+    @NotNull(message = "{campo.cpf.obrigatorio}")
+    @CPF(message = "Cpf invalido")
+    private String cpf;
 
     @Column(nullable = false, length = 255)
     @NotEmpty(message = "{campo.endereco.obrigatorio}")
@@ -42,12 +34,13 @@ public class Empresa {
     @JoinColumn(name="id_conta", nullable=false)
     private ContaCorrente contaCorrente;
 
+    @ManyToOne
+    @JoinColumn(name="id_empresa", nullable=false)
+    private Empresa empresa;
 
     @PrePersist
     public void prePersist(){
         setData_cadastro(LocalDate.now());
     }
-
-
 
 }
