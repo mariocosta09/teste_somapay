@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,12 +47,12 @@ public class EmpresaController {
     public Empresa getEmpresaById(@PathVariable Integer id) {
         return repository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Empresa não encontrada"));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Empresa create(@RequestBody EmpresaDTO dto) {
+    public Empresa create(@RequestBody @Valid EmpresaDTO dto) {
 
 
         ContaCorrente conta = empresaService.createContaCorrente(dto.getNumero_agencia(), dto.getNumero_conta(), dto.getSaldo(), dto.getTipo_conta());
@@ -77,12 +78,12 @@ public class EmpresaController {
                     repository.delete(empresa);
                     return Void.TYPE;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada"));
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateEmpresa(@PathVariable Integer id, @RequestBody EmpresaDTO empresaUpdate) {
+    public void updateEmpresa(@PathVariable Integer id, @RequestBody @Valid  EmpresaDTO empresaUpdate) {
         repository
                 .findById(id)
                 .map(empresa -> {
@@ -95,7 +96,7 @@ public class EmpresaController {
 
                     empresaService.updateContaCorrente(contaCorrente, empresaUpdate);
                     return repository.save(empresa);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada"));
 
     }
 
@@ -106,7 +107,7 @@ public class EmpresaController {
                 .map(saldo -> {
                     return saldo.getContaCorrente().getSaldo();
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Empresa não encontrada"));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Collections.singletonMap("saldo_empresa", saldoEmpresa));

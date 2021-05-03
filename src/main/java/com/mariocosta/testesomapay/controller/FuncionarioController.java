@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +41,12 @@ public class FuncionarioController {
     public Funcionario getFuncionarioById(@PathVariable Integer id){
         return  funcionarioRepository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Funcionario não encontrado"));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Funcionario create(@RequestBody FuncionarioDTO dto){
+    public Funcionario create(@RequestBody @Valid FuncionarioDTO dto){
 
         ContaCorrente conta =   funcionarioService.createContaCorrente(dto.getNumero_agencia(),dto.getNumero_conta(), dto.getSaldo(), dto.getTipo_conta());
 
@@ -78,12 +79,12 @@ public class FuncionarioController {
                     funcionarioRepository.delete(empresa);
                     return Void.TYPE;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Funcionario não encontrado"));
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateFuncionario(@PathVariable Integer id, @RequestBody FuncionarioDTO funcionarioUpdate){
+    public void updateFuncionario(@PathVariable Integer id, @RequestBody @Valid FuncionarioDTO funcionarioUpdate){
         funcionarioRepository
                 .findById(id)
                 .map(funcionario -> {
@@ -107,7 +108,8 @@ public class FuncionarioController {
                 .map(saldo -> {
                     return  saldo.getContaCorrente().getSaldo();
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Funcionario não encontrado"));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Collections.singletonMap("saldo_funcionario", saldoFuncionario));
