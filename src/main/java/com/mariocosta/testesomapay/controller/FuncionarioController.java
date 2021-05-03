@@ -6,7 +6,7 @@ import com.mariocosta.testesomapay.model.Funcionario;
 import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
 import com.mariocosta.testesomapay.repository.EmpresaRepository;
 import com.mariocosta.testesomapay.repository.FuncionarioRepository;
-import com.mariocosta.testesomapay.controller.dto.FuncionarioDTO;
+import com.mariocosta.testesomapay.dto.FuncionarioDTO;
 import com.mariocosta.testesomapay.service.FuncionarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

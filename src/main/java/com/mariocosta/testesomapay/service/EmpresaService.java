@@ -1,12 +1,13 @@
 package com.mariocosta.testesomapay.service;
 
-import com.mariocosta.testesomapay.controller.dto.EmpresaDTO;
-import com.mariocosta.testesomapay.controller.dto.FolhaPagamentoDTO;
+import com.mariocosta.testesomapay.dto.EmpresaDTO;
+import com.mariocosta.testesomapay.dto.FolhaPagamentoDTO;
 import com.mariocosta.testesomapay.model.ContaCorrente;
 import com.mariocosta.testesomapay.model.Empresa;
 import com.mariocosta.testesomapay.model.Funcionario;
 import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +19,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmpresaService {
     private final ContaCorrenterRepository contaCorrenteRepository;
+
+    @Autowired
+    private FolhaPagamento folhaPagamento;
 
     public ContaCorrente createContaCorrente(Integer numero_agencia, String numero_conta, Integer saldo, String tipo_conta){
         ContaCorrente contaCorrente = new ContaCorrente();
@@ -44,7 +48,7 @@ public class EmpresaService {
 
     public void atualizaSaldo(Optional<Empresa> empresa, Integer totalfolha,  double taxa){
 
-        double valorTotal = empresa.get().getContaCorrente().getSaldo() - this.calcularTotalDescontos(totalfolha,taxa);
+        double valorTotal = empresa.get().getContaCorrente().getSaldo() - folhaPagamento.calcularTotalDescontos(totalfolha,taxa);
         contaCorrenteRepository.findById(empresa.get().getContaCorrente().getId())
                 .map(contaCorrente -> {
                     contaCorrente.setNumero_conta(empresa.get().getContaCorrente().getNumero_conta());
@@ -54,11 +58,6 @@ public class EmpresaService {
                     return contaCorrenteRepository.save(contaCorrente);
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-    }
-
-    public Double calcularTotalDescontos(Integer totalFolha,double taxa){
-        double totalDescontos = totalFolha + taxa;
-        return  totalDescontos;
     }
 
     public void pagamentoFuncionario(Funcionario funcionario, FolhaPagamentoDTO folhaPagamentoDTO){
@@ -71,6 +70,8 @@ public class EmpresaService {
                     return contaCorrenteRepository.save(contaCorrente);
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+
 
 
 }

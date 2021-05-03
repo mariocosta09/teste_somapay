@@ -1,6 +1,6 @@
 package com.mariocosta.testesomapay.controller;
 
-import com.mariocosta.testesomapay.controller.exception.ApiErros;
+import com.mariocosta.testesomapay.exception.ApiErros;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

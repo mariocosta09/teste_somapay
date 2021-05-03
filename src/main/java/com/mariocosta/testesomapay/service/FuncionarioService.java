@@ -1,6 +1,6 @@
 package com.mariocosta.testesomapay.service;
 
-import com.mariocosta.testesomapay.controller.dto.FuncionarioDTO;
+import com.mariocosta.testesomapay.dto.FuncionarioDTO;
 import com.mariocosta.testesomapay.model.ContaCorrente;
 import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
 import lombok.RequiredArgsConstructor;

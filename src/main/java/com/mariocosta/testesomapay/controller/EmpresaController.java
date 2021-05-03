@@ -6,8 +6,8 @@ import com.mariocosta.testesomapay.model.Funcionario;
 import com.mariocosta.testesomapay.repository.ContaCorrenterRepository;
 import com.mariocosta.testesomapay.repository.EmpresaRepository;
 import com.mariocosta.testesomapay.repository.FuncionarioRepository;
-import com.mariocosta.testesomapay.controller.dto.EmpresaDTO;
-import com.mariocosta.testesomapay.controller.dto.FolhaPagamentoDTO;
+import com.mariocosta.testesomapay.dto.EmpresaDTO;
+import com.mariocosta.testesomapay.dto.FolhaPagamentoDTO;
 import com.mariocosta.testesomapay.service.EmpresaService;
 import com.mariocosta.testesomapay.service.FolhaPagamento;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class EmpresaController {
     public Empresa getEmpresaById(@PathVariable Integer id) {
         return repository
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Empresa não encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada"));
     }
 
     @PostMapping
@@ -83,7 +83,7 @@ public class EmpresaController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateEmpresa(@PathVariable Integer id, @RequestBody @Valid  EmpresaDTO empresaUpdate) {
+    public void updateEmpresa(@PathVariable Integer id, @RequestBody @Valid EmpresaDTO empresaUpdate) {
         repository
                 .findById(id)
                 .map(empresa -> {
@@ -107,7 +107,7 @@ public class EmpresaController {
                 .map(saldo -> {
                     return saldo.getContaCorrente().getSaldo();
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Empresa não encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa não encontrada"));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 Collections.singletonMap("saldo_empresa", saldoEmpresa));
@@ -118,21 +118,11 @@ public class EmpresaController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> pagarFuncionarios(@RequestBody FolhaPagamentoDTO folhaPagamentoDTO) {
 
+
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         Optional<Empresa> empresa = repository.findById(folhaPagamentoDTO.getId_empresa());
-
         Integer totalfolha = folhaPagamento.calculaFolhaPagamento(funcionarios, folhaPagamentoDTO);
-        if (totalfolha > empresa.get().getContaCorrente().getSaldo()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    Collections.singletonMap("Error", "Saldo insuficiente"));
-        } else {
-            folhaPagamento.efetuaPagamentoFuncionarios(funcionarios, folhaPagamentoDTO);
-            double taxaAdministracao = folhaPagamento.calcularTaxa(totalfolha);
-            empresaService.atualizaSaldo(empresa, totalfolha, taxaAdministracao);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    Collections.singletonMap("Total_folha_pagamento", totalfolha));
-        }
+        return folhaPagamento.sendPagamento(totalfolha, funcionarios, folhaPagamentoDTO, empresa);
 
 
     }

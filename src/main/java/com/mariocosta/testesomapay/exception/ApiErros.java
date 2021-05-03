@@ -1,4 +1,4 @@
-package com.mariocosta.testesomapay.controller.exception;
+package com.mariocosta.testesomapay.exception;
 
 import lombok.Getter;
 
